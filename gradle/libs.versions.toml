@@ -1,0 +1,15 @@
+[versions]
+lombok = "9.5.0"
+junitBom = "6.0.0"
+log4j = "2.26.1"
+assertJ = "3.27.7"
+
+[libraries]
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junitBom" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertJ" }
+log4j-slf4j = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
+
+[plugins]
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
