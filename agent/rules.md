@@ -27,6 +27,53 @@ public class Calculator {
 }
 ```
 
+### Логирование
+
+* [ ] Для логирования в production-коде использовать Lombok-аннотацию `@Slf4j`.
+* [ ] Для вывода информационных сообщений использовать уровень `info`.
+* [ ] Не использовать `System.out.println()` для вывода информации в production-коде.
+* [ ] При необходимости информационного логирования использовать `log.info(...)`.
+* [ ] Все сообщения логов должны быть написаны **на английском языке**.
+* [ ] Не использовать русский язык в текстах логов.
+* [ ] Сообщения логов должны быть понятными и кратко описывать происходящее в программе.
+* [ ] Не дублировать одну и ту же информацию в нескольких логах без необходимости.
+
+Пример:
+
+```java
+import lombok.extern.slf4j.Slf4j;
+import lombok.experimental.UtilityClass;
+
+@Slf4j
+@UtilityClass
+public class Calculator {
+
+    public int add(int a, int b) {
+        log.info("Calculating sum for values: {} and {}", a, b);
+
+        int result = a + b;
+
+        log.info("Calculation completed with result: {}", result);
+
+        return result;
+    }
+}
+```
+
+Правильно:
+
+```java
+log.info("Starting calculation for order {}", orderId);
+log.info("Order {} processed successfully", orderId);
+```
+
+Неправильно:
+
+```java
+log.info("Начало обработки заказа {}", orderId);
+System.out.println("Order processed");
+```
+
 ---
 
 ## Tests
@@ -153,6 +200,12 @@ void shouldReturnZeroForEmptyList() {
 
 * [ ] Все созданные и изменённые классы используют `@UtilityClass`.
 * [ ] Не добавлены обычные классы без `@UtilityClass`.
+* [ ] Для логирования используется `@Slf4j`.
+* [ ] Информационные сообщения выводятся через `log.info(...)`.
+* [ ] `System.out.println()` не используется для production-логирования.
+* [ ] Все сообщения логов написаны на английском языке.
+* [ ] Логи содержат понятные и информативные сообщения.
+* [ ] Логирование не дублируется без необходимости.
 
 ### Tests
 
