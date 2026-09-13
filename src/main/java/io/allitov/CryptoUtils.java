@@ -23,7 +23,7 @@ public class CryptoUtils {
      * @param p модуль
      * @return a^x mod p
      */
-    public static long pow(long a, long x, long p) {
+    public long pow(long a, long x, long p) {
         if (p <= 0) {
             throw new IllegalArgumentException("Модуль p должен быть положительным");
         }
@@ -51,7 +51,7 @@ public class CryptoUtils {
         return result;
     }
 
-    public static long gcdSimple(long a, long b) {
+    public long gcdSimple(long a, long b) {
         if (a < 0 || b < 0) {
             throw new IllegalArgumentException("Параметры должны быть положительными");
         }
@@ -71,7 +71,7 @@ public class CryptoUtils {
         return a;
     }
 
-    public static List<Long> gcd(long a, long b) {
+    public List<Long> gcd(long a, long b) {
         if (a < 0 || b < 0) {
             throw new IllegalArgumentException("Параметры должны положительные");
         }
@@ -99,7 +99,7 @@ public class CryptoUtils {
      *
      * @return список [gcd, x, y]
      */
-    public static List<Long> gcdKeyboard() {
+    public List<Long> gcdKeyboard() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите числа a и b: ");
         long a = scanner.nextLong();
@@ -112,7 +112,7 @@ public class CryptoUtils {
      *
      * @return список [gcd, x, y]
      */
-    public static List<Long> gcdRandom() {
+    public List<Long> gcdRandom() {
         Random random = new Random();
         long a = random.nextLong(1, 1000);
         long b = random.nextLong(1, 1000);
@@ -126,14 +126,14 @@ public class CryptoUtils {
      *
      * @return список [gcd, x, y]
      */
-    public static List<Long> gcdRandomPrime() {
+    public List<Long> gcdRandomPrime() {
         long a = randomPrime();
         long b = randomPrime();
         System.out.printf("Сгенерированы простые числа: a = %d, b = %d%n", a, b);
         return gcd(a, b);
     }
 
-    private static long randomPrime() {
+    private long randomPrime() {
         Random random = new Random();
         long candidate = random.nextLong(2, 1000);
         while (!ferma(candidate)) {
@@ -142,7 +142,7 @@ public class CryptoUtils {
         return candidate;
     }
 
-    public static boolean ferma(long p) {
+    public boolean ferma(long p) {
         if (p == 2) {
             return true;
         }
@@ -160,7 +160,7 @@ public class CryptoUtils {
         return true;
     }
 
-    static void main() {
+    void main() {
         long a = 3;
         long x = 100;
         long p = 7;
