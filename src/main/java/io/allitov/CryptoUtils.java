@@ -5,12 +5,16 @@ import java.util.Random;
 import java.util.Scanner;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Криптографическая библиотека.
  */
+@Slf4j
 @UtilityClass
 public class CryptoUtils {
+
+    private static final Random RANDOM = new Random();
 
     /**
      * Быстрое возведение числа в степень по модулю.
@@ -101,7 +105,7 @@ public class CryptoUtils {
      */
     public List<Long> gcdKeyboard() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Введите числа a и b: ");
+        log.info("Enter numbers a and b:");
         long a = scanner.nextLong();
         long b = scanner.nextLong();
         return gcd(a, b);
@@ -113,10 +117,9 @@ public class CryptoUtils {
      * @return список [gcd, x, y]
      */
     public List<Long> gcdRandom() {
-        Random random = new Random();
-        long a = random.nextLong(1, 1000);
-        long b = random.nextLong(1, 1000);
-        System.out.printf("Сгенерированы числа: a = %d, b = %d%n", a, b);
+        long a = RANDOM.nextLong(1, 1000);
+        long b = RANDOM.nextLong(1, 1000);
+        log.info("Generated numbers: a = {}, b = {}", a, b);
         return gcd(a, b);
     }
 
@@ -129,15 +132,14 @@ public class CryptoUtils {
     public List<Long> gcdRandomPrime() {
         long a = randomPrime();
         long b = randomPrime();
-        System.out.printf("Сгенерированы простые числа: a = %d, b = %d%n", a, b);
+        log.info("Generated prime numbers: a = {}, b = {}", a, b);
         return gcd(a, b);
     }
 
     private long randomPrime() {
-        Random random = new Random();
-        long candidate = random.nextLong(2, 1000);
+        long candidate = RANDOM.nextLong(2, 1000);
         while (!ferma(candidate)) {
-            candidate = random.nextLong(2, 1000);
+            candidate = RANDOM.nextLong(2, 1000);
         }
         return candidate;
     }
@@ -147,9 +149,8 @@ public class CryptoUtils {
             return true;
         }
 
-        Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            long a = (random.nextInt(0, 32767) % (p - 2)) + 2;
+            long a = (RANDOM.nextInt(0, 32767) % (p - 2)) + 2;
             if (gcd(a, p).getFirst() != 1) {
                 return false;
             }
@@ -167,16 +168,16 @@ public class CryptoUtils {
 
         long y = pow(a, x, p);
 
-        System.out.println("y = " + y);
+        log.info("y = {}", y);
 
-        System.out.println(gcdSimple(28, 8));
+        log.info("GCD (simple): {}", gcdSimple(28, 8));
 
-        System.out.println(gcd(28, 19));
+        log.info("GCD with Bezout coefficients: {}", gcd(28, 19));
 
-        System.out.println(ferma(1105));
+        log.info("Primality test for 1105: {}", ferma(1105));
 
-        System.out.println("НОД (ввод с клавиатуры): " + gcdKeyboard());
-        System.out.println("НОД (случайные числа): " + gcdRandom());
-        System.out.println("НОД (случайные простые числа): " + gcdRandomPrime());
+        log.info("GCD (keyboard input): {}", gcdKeyboard());
+        log.info("GCD (random numbers): {}", gcdRandom());
+        log.info("GCD (random primes): {}", gcdRandomPrime());
     }
 }
