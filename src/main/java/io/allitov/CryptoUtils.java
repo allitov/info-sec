@@ -1,6 +1,8 @@
 package io.allitov;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -136,6 +138,81 @@ public class CryptoUtils {
         return gcd(a, b);
     }
 
+    /**
+     * Решает задачу нахождения дискретного логарифма:
+     *     y = a^x mod p
+     * при известных a, y, p. Используется алгоритм «Шаг младенца, шаг великана».
+     * Ищет x в диапазоне [1, m^2], где m = ceil(sqrt(p - 1)).
+     *
+     * @param a основание (взаимно простое с p)
+     * @param y результат
+     * @param p модуль (простое число)
+     * @return x такое, что a^x mod p = y, или -1, если решения не существует
+     */
+    public long discreteLog(long a, long y, long p) {
+        if (p <= 1) {
+            throw new IllegalArgumentException("Модуль p должен быть больше 1");
+        }
+
+        a = Math.floorMod(a, p);
+        y = Math.floorMod(y, p);
+
+        if (gcd(a, p).getFirst() != 1) {
+            throw new IllegalArgumentException("a и p должны быть взаимно простыми");
+        }
+
+        long m = (long) Math.ceil(Math.sqrt(p - 1));
+
+        Map<Long, Long> babySteps = new HashMap<>();
+        long current = y;
+        for (long j = 0; j < m; j++) {
+            babySteps.put(current, j);
+            current = (current * a) % p;
+        }
+
+        long factor = pow(a, m, p);
+        long gamma = 1;
+        for (long i = 1; i <= m; i++) {
+            gamma = (gamma * factor) % p;
+            if (babySteps.containsKey(gamma)) {
+                return i * m - babySteps.get(gamma);
+            }
+        }
+
+        log.info("Discrete logarithm not found for a = {}, y = {}, p = {}", a, y, p);
+
+        return -1;
+    }
+
+    /**
+     * Решает задачу нахождения дискретного логарифма для чисел a, y, p, введённых с клавиатуры.
+     *
+     * @return x такое, что a^x mod p = y, или -1, если решения не существует
+     */
+    public long discreteLogKeyboard() {
+        Scanner scanner = new Scanner(System.in);
+        log.info("Enter numbers a, y and p:");
+        long a = scanner.nextLong();
+        long y = scanner.nextLong();
+        long p = scanner.nextLong();
+        return discreteLog(a, y, p);
+    }
+
+    /**
+     * Решает задачу нахождения дискретного логарифма для случайно сгенерированных параметров:
+     * простого p, основания a и результата y = a^x mod p.
+     *
+     * @return найденное x такое, что a^x mod p = y, или -1, если решения не существует
+     */
+    public long discreteLogRandom() {
+        long p = randomPrime();
+        long a = RANDOM.nextLong(1, p);
+        long x = RANDOM.nextLong(0, p - 1);
+        long y = pow(a, x, p);
+        log.info("Generated parameters: a = {}, y = {}, p = {}", a, y, p);
+        return discreteLog(a, y, p);
+    }
+
     private long randomPrime() {
         long candidate = RANDOM.nextLong(2, 1000);
         while (!ferma(candidate)) {
@@ -179,5 +256,9 @@ public class CryptoUtils {
         log.info("GCD (keyboard input): {}", gcdKeyboard());
         log.info("GCD (random numbers): {}", gcdRandom());
         log.info("GCD (random primes): {}", gcdRandomPrime());
+
+        log.info("Discrete log of 6 base 3 mod 7: {}", discreteLog(3, 6, 7));
+        log.info("Discrete log (keyboard input): {}", discreteLogKeyboard());
+        log.info("Discrete log (random parameters): {}", discreteLogRandom());
     }
 }
