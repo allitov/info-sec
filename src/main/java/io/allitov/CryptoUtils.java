@@ -1,5 +1,6 @@
 package io.allitov;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -213,12 +214,131 @@ public class CryptoUtils {
         return discreteLog(a, y, p);
     }
 
+    /**
+     * Вычисляет общий секретный ключ двух абонентов по схеме Диффи-Хеллмана:
+     *     Ya = g^Xa mod p, Yb = g^Xb mod p
+     *     K = Yb^Xa mod p = Ya^Xb mod p = g^(Xa * Xb) mod p
+     *
+     * @param p большое простое число
+     * @param g первообразный корень по модулю p
+     * @param xa секретный показатель абонента A из диапазона [2, p - 1]
+     * @param xb секретный показатель абонента B из диапазона [2, p - 1]
+     * @return общий секретный ключ K
+     */
+    public long diffieHellman(long p, long g, long xa, long xb) {
+        if (p < 3 || !ferma(p)) {
+            throw new IllegalArgumentException("p должно быть простым числом больше 2");
+        }
+
+        if (g < 2 || g > p - 1) {
+            throw new IllegalArgumentException("g должно быть в диапазоне [2, p - 1]");
+        }
+
+        if (xa < 2 || xa > p - 1 || xb < 2 || xb > p - 1) {
+            throw new IllegalArgumentException("Секретные показатели Xa и Xb должны быть в диапазоне [2, p - 1]");
+        }
+
+        long ya = pow(g, xa, p);
+        long yb = pow(g, xb, p);
+
+        log.info("Public keys: Ya = {}, Yb = {}", ya, yb);
+
+        return pow(yb, xa, p);
+    }
+
+    /**
+     * Вычисляет общий секретный ключ по схеме Диффи-Хеллмана для параметров p, g, Xa, Xb,
+     * введённых с клавиатуры.
+     *
+     * @return общий секретный ключ K
+     */
+    public long diffieHellmanKeyboard() {
+        Scanner scanner = new Scanner(System.in);
+        log.info("Enter numbers p, g, Xa and Xb:");
+        long p = scanner.nextLong();
+        long g = scanner.nextLong();
+        long xa = scanner.nextLong();
+        long xb = scanner.nextLong();
+        return diffieHellman(p, g, xa, xb);
+    }
+
+    /**
+     * Вычисляет общий секретный ключ по схеме Диффи-Хеллмана для случайно сгенерированных параметров:
+     * большого простого p, первообразного корня g по модулю p и случайных показателей Xa, Xb из [2, p - 1].
+     *
+     * @return общий секретный ключ K
+     */
+    public long diffieHellmanRandom() {
+        long p = randomLargePrime();
+        long g = primitiveRoot(p);
+        long xa = RANDOM.nextLong(2, p);
+        long xb = RANDOM.nextLong(2, p);
+        log.info("Generated parameters: p = {}, g = {}, Xa = {}, Xb = {}", p, g, xa, xb);
+        return diffieHellman(p, g, xa, xb);
+    }
+
     private long randomPrime() {
         long candidate = RANDOM.nextLong(2, 1000);
         while (!ferma(candidate)) {
             candidate = RANDOM.nextLong(2, 1000);
         }
         return candidate;
+    }
+
+    private long randomLargePrime() {
+        long candidate = RANDOM.nextLong(1_000_000_000, 2_000_000_000);
+        while (!ferma(candidate)) {
+            candidate = RANDOM.nextLong(1_000_000_000, 2_000_000_000);
+        }
+        return candidate;
+    }
+
+    /**
+     * Находит наименьший первообразный корень по модулю простого числа p.
+     *
+     * @param p простое число
+     * @return наименьший первообразный корень по модулю p
+     */
+    private long primitiveRoot(long p) {
+        List<Long> factors = primeFactors(p - 1);
+        for (long g = 2; g <= p - 1; g++) {
+            boolean isRoot = true;
+            for (long factor : factors) {
+                if (pow(g, (p - 1) / factor, p) == 1) {
+                    isRoot = false;
+                    break;
+                }
+            }
+
+            if (isRoot) {
+                return g;
+            }
+        }
+
+        throw new IllegalArgumentException("Первообразный корень по модулю p не найден");
+    }
+
+    /**
+     * Возвращает список простых делителей числа n (с повторениями).
+     *
+     * @param n число больше 1
+     * @return список простых делителей
+     */
+    private List<Long> primeFactors(long n) {
+        List<Long> factors = new ArrayList<>();
+        long remaining = n;
+        for (long d = 2; d * d <= remaining; d++) {
+            while (remaining % d == 0) {
+                factors.add(d);
+                remaining /= d;
+            }
+        }
+
+        if (remaining > 1) {
+            factors.add(remaining);
+        }
+
+        return factors;
     }
 
     public boolean ferma(long p) {
@@ -260,5 +380,10 @@ public class CryptoUtils {
         log.info("Discrete log of 6 base 3 mod 7: {}", discreteLog(3, 6, 7));
         log.info("Discrete log (keyboard input): {}", discreteLogKeyboard());
         log.info("Discrete log (random parameters): {}", discreteLogRandom());
+
+        log.info("Diffie-Hellman shared key for p = 23, g = 5, Xa = 6, Xb = 15: {}",
+                diffieHellman(23, 5, 6, 15));
+        log.info("Diffie-Hellman shared key (keyboard input): {}", diffieHellmanKeyboard());
+        log.info("Diffie-Hellman shared key (random parameters): {}", diffieHellmanRandom());
     }
 }
