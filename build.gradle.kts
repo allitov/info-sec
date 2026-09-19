@@ -27,6 +27,7 @@ dependencies {
 
 tasks.run {
     mainClass.set("io.allitov.Main")
+    standardInput = System.`in`
 }
 
 tasks.test {
