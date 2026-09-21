@@ -12,14 +12,14 @@ import lombok.experimental.UtilityClass;
 @Slf4j
 @UtilityClass
 public class Main {
+//p = 1982691611, Ca = 169029513, Da = 721281357, Cb = 1300646757, Db = 216637523
+    private final Scanner SCANNER = new Scanner(System.in);
 
-    private static final Scanner SCANNER = new Scanner(System.in);
-
-    static void main(String[] args) {
+    void main(String[] args) {
         run(args);
     }
 
-    private static void run(String[] args) {
+    private void run(String[] args) {
         if (args.length != 4) {
             log.error("Usage: encrypt <input> <output> manual|random or decrypt <input> <output> manual");
             return;
@@ -39,7 +39,7 @@ public class Main {
         }
     }
 
-    private static void encryptFile(Path input, Path output, String mode) throws IOException {
+    private void encryptFile(Path input, Path output, String mode) throws IOException {
         long[] keys;
         if ("random".equals(mode)) {
             keys = Shamir.generateKeys();
@@ -56,7 +56,7 @@ public class Main {
         Shamir.encrypt(input, output, keys[0], keys[1], keys[3], keys[2]);
     }
 
-    private static void decryptFile(Path input, Path output, String mode) throws IOException {
+    private void decryptFile(Path input, Path output, String mode) throws IOException {
         if (!"manual".equals(mode)) {
             log.error("Decryption mode must be manual");
             return;
@@ -67,7 +67,7 @@ public class Main {
         Shamir.decrypt(input, output, p, db);
     }
 
-    private static long readLong(String name) {
+    private long readLong(String name) {
         log.info("Enter {}:", name);
         return SCANNER.nextLong();
     }

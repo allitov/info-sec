@@ -18,9 +18,9 @@ import java.util.Random;
 @UtilityClass
 public class Shamir {
 
-    private static final Random RANDOM = new Random();
-    private static final long MIN_PRIME = 257L;
-    private static final long MAX_MODULUS = 3_037_000_000L;
+    private final Random RANDOM = new Random();
+    private final long MIN_PRIME = 257L;
+    private final long MAX_MODULUS = 3_037_000_000L;
 
     /**
      * Generates all parameters required by the Shamir cipher.
