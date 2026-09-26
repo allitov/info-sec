@@ -285,7 +285,7 @@ public class CryptoUtils {
         return candidate;
     }
 
-    private long randomLargePrime() {
+    public long randomLargePrime() {
         long candidate = RANDOM.nextLong(1_000_000_000, 2_000_000_000);
         while (!ferma(candidate)) {
             candidate = RANDOM.nextLong(1_000_000_000, 2_000_000_000);
