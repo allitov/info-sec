@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 @Slf4j
 @UtilityClass
 public class Main {
-//p = 1982691611, Ca = 169029513, Da = 721281357, Cb = 1300646757, Db = 216637523
+
     private final Scanner SCANNER = new Scanner(System.in);
 
     void main(String[] args) {
