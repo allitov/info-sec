@@ -42,18 +42,18 @@ public class Main {
     private void encryptFile(Path input, Path output, String mode) throws IOException {
         long[] keys;
         if ("random".equals(mode)) {
-            keys = Shamir.generateKeys();
+            keys = RSA.generateKeys();
         } else if ("manual".equals(mode)) {
             long p = readLong("p");
-            long ca = readLong("Ca");
-            long cb = readLong("Cb");
-            keys = Shamir.createKeys(p, ca, cb);
+            long q = readLong("q");
+            long db = readLong("Db");
+            keys = RSA.createKeys(p, q, db);
         } else {
             log.error("Encryption mode must be manual or random");
             return;
         }
 
-        Shamir.encrypt(input, output, keys[0], keys[1], keys[3], keys[2]);
+        RSA.encrypt(input, output, keys[0], keys[1], keys[4]);
     }
 
     private void decryptFile(Path input, Path output, String mode) throws IOException {
@@ -63,8 +63,9 @@ public class Main {
         }
 
         long p = readLong("p");
-        long db = readLong("Db");
-        Shamir.decrypt(input, output, p, db);
+        long q = readLong("q");
+        long cb = readLong("Cb");
+        RSA.decrypt(input, output, p, q, cb);
     }
 
     private long readLong(String name) {
