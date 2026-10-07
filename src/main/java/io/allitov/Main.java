@@ -5,9 +5,8 @@ import java.nio.file.Path;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import lombok.extern.slf4j.Slf4j;
-
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @UtilityClass
@@ -21,7 +20,8 @@ public class Main {
 
     private void run(String[] args) {
         if (args.length != 4) {
-            log.error("Usage: encrypt <input> <output> manual|random or decrypt <input> <output> manual");
+            log.error("Usage: encrypt <input> <output> manual|random, decrypt <input> <output> manual, "
+                    + "vernam-encrypt <input> <output> manual|random or vernam-decrypt <input> <output> manual");
             return;
         }
 
@@ -32,7 +32,9 @@ public class Main {
             switch (args[0]) {
                 case "encrypt" -> encryptFile(input, output, args[3]);
                 case "decrypt" -> decryptFile(input, output, args[3]);
-                default -> log.error("Operation must be encrypt or decrypt");
+                case "vernam-encrypt" -> vernamEncryptFile(input, output, args[3]);
+                case "vernam-decrypt" -> vernamDecryptFile(input, output, args[3]);
+                default -> log.error("Operation must be encrypt, decrypt, vernam-encrypt or vernam-decrypt");
             }
         } catch (IOException | IllegalArgumentException | NoSuchElementException e) {
             log.error("Operation failed: {}", e.getMessage());
@@ -65,6 +67,30 @@ public class Main {
         long p = readLong("p");
         long db = readLong("Db");
         Shamir.decrypt(input, output, p, db);
+    }
+
+    private void vernamEncryptFile(Path input, Path output, String mode) throws IOException {
+        if ("random".equals(mode)) {
+            Vernam.encrypt(input, output, Vernam.generateKey());
+        } else if ("manual".equals(mode)) {
+            long p = readLong("p");
+            long g = readLong("g");
+            long xa = readLong("Xa");
+            long xb = readLong("Xb");
+            Vernam.encrypt(input, output, Vernam.generateKey(p, g, xa, xb));
+        } else {
+            log.error("Encryption mode must be manual or random");
+        }
+    }
+
+    private void vernamDecryptFile(Path input, Path output, String mode) throws IOException {
+        if (!"manual".equals(mode)) {
+            log.error("Decryption mode must be manual");
+            return;
+        }
+
+        long key = readLong("K");
+        Vernam.decrypt(input, output, key);
     }
 
     private long readLong(String name) {
