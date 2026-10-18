@@ -16,7 +16,7 @@
 - [ ] **T1** — Класс `ElGamal`: ядро ЭЦП + вложенный CLI
     - **agent:** coder
     - **inputs:**
-        - Создать `src/main/java/io/allitov/ElGamal.java`, `@Slf4j @UtilityClass public class ElGamal` (Lombok-паттерн проекта; поля без ключевого слова `static` — `@UtilityClass` статизирует сам). Java 25.
+        - Создать `src/main/java/io/allitov/ElGamalSign.java`, `@Slf4j @UtilityClass public class ElGamalSign` (Lombok-паттерн проекта; поля без ключевого слова `static` — `@UtilityClass` статизирует сам). Java 25.
         - **Публичный API (зеркало RSASign, `src/main/java/io/allitov/RSASign.java:45-120`):**
             - `public long[] generateKeys()` — делегирует `IlGamal.generateKeys()` (вернёт `{p, g, Cb, Db}`; p = простое из `CryptoUtils.randomLargePrime()` в [1e9, 2e9), g — наименьший первообразный корень, Cb ∈ [1, p−2], Db = g^Cb mod p).
             - `public long[] createKeys(long p, long g, long cb)` — делегирует `IlGamal.createKeys(p, g, cb)` (валидирует p ∈ [257, 3_037_000_000] + `CryptoUtils.ferma`, g — первообразный корень, Cb ∈ [1, p−2]; бросает IllegalArgumentException).
