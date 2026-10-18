@@ -7,6 +7,9 @@ permissions:
     resource: "*"
     effect: deny
   - action: edit
+    resource: "src/main/*"
+    effect: allow
+  - action: edit
     resource: "*/src/main/*"
     effect: allow
   - action: shell

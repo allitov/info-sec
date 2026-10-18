@@ -9,6 +9,9 @@ permissions:
   - action: edit
     resource: "reviews/*"
     effect: allow
+  - action: edit
+    resource: "*/reviews/*"
+    effect: allow
   - action: shell
     resource: "*"
     effect: deny
