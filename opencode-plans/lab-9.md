@@ -4,7 +4,7 @@
 
 **Goal:** Реализовать ЭЦП Эль-Гамаля (tasks/lab-9.md): новый утилитный класс `ElGamal` в пакете `io.allitov` — подпись любого файла (отдельным файлом подписи И присоединённой — оба варианта, как в lab-8) и проверка подписи. SHA-256 хеш подписывается побайтово: каждый байт h — пара (a, b) при одних и тех же ключах {p, g, Cb, Db}, переиспользуемых из `IlGamal.generateKeys()/createKeys()`. CLI зеркалирует `RSASign` (`sign|sign-attached|verify|verify-attached`, режим `manual|random`); тесты зеркалируют `RSASignTest`/`IlGamalTest`. Критерий готовности: `gradlew test` зелёный включая новый `ElGamalTest`; round-trip «подпись → проверка = true», любая модификация файла или подписи → false.
 
-**active:** —
+**active:** T3
 
 ## open_questions
 
@@ -13,7 +13,7 @@
 
 ## backlog
 
-- [ ] **T1** — Класс `ElGamal`: ядро ЭЦП + вложенный CLI
+- [x] **T1** — Класс `ElGamal`: ядро ЭЦП + вложенный CLI
     - **agent:** coder
     - **inputs:**
         - Создать `src/main/java/io/allitov/ElGamalSign.java`, `@Slf4j @UtilityClass public class ElGamalSign` (Lombok-паттерн проекта; поля без ключевого слова `static` — `@UtilityClass` статизирует сам). Java 25.
@@ -38,8 +38,8 @@
     - **deps:** []
     - **acceptance:** `gradlew compileJava` проходит; класс содержит все 6 публичных методов с точными сигнатурами выше; вложенный `Main` диспетчирует 4 команды; ни один существующий файл не изменён.
     - **description:** Создать `ElGamal.java` целиком по спецификации в inputs (ядро sign/verify + формат файла + валидаторы + вложенный CLI). Одним атомарным файлом.
-    - **touched:**
-- [ ] **T2** — Точка входа lab-9 (решение по Q1)
+    - **touched:** src/main/java/io/allitov/ElGamal.java (новый файл; ревью: reviews/lab-9-t1.code-review.md, PASS)
+- [x] **T2** — Точка входа lab-9 (решение по Q1)
     - **agent:** coder
     - **inputs:**
         - `src/main/java/io/allitov/Main.java` (130 строк) — gradle entry (`build.gradle.kts:29`, mainClass `io.allitov.Main`, `standardInput = System.in`). Сейчас — полный дубликат диспетчера RSASign.Main: команды `sign|sign-attached|verify|verify-attached`, вызовы RSASign на строках 53/65/81/98. Внешних callers нет (только mainClass) — изменение безопасно.
@@ -47,7 +47,7 @@
     - **deps:** [T1]
     - **acceptance:** `gradlew compileJava` проходит; `gradlew run --args="..."` с командами `sign` / `sign-attached` / `verify` / `verify-attached` диспетчит в `ElGamal`; поведение соответствует прежнему контракту CLI (те же аргументы, режим manual|random).
     - **description:** Переписать диспетчер `Main` на команды lab-9 (вызовы `ElGamal`), решение Q1.
-    - **touched:**
+    - **touched:** src/main/java/io/allitov/Main.java (ретаргет RSASign→ElGamal; ревью: reviews/lab-9-t2.code-review.md, PASS)
 - [ ] **T3** — Тесты `ElGamalTest`
     - **agent:** tester
     - **inputs:**
