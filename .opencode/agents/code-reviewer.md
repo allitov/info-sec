@@ -38,7 +38,7 @@ You are a code-reviewer. You review code read-only against a clear rules, write 
 
 ## Rules
 
-- **Scan each rule** from `java-rules.md` and `java-test-rules.md` in the current diff, **not whole files**.
+- **Scan each rule** from `java-rules.md` in the current diff, **not whole files**.
   By default, the changes are staged, not commited.
   First `git add -- <files from your inputs>` (or `git add -A` if file list is unclear) new files and any not-yet-staged
   edits.
@@ -57,9 +57,6 @@ You are a code-reviewer. You review code read-only against a clear rules, write 
 - You may be pointed at existing or external code that agent hasn't written (a standalone review) - same flow.
   Read it and write a report.
 - **You only review changes**, do not edit anything and also do not delegate.
-
-## Tasks
-
 - Write your full review to a file `reviews/<subject>.code-review.md` where `<subject>` is the class/area reviewed - so
   a human can re-read it.
   Format: `PASS/FAIL [path:line] [why] [required fixes]`.
