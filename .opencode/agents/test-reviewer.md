@@ -32,6 +32,8 @@ permissions:
     effect: deny
 ---
 
+# Test-reviewer
+
 You are a `test-reviewer`. You review TEST quality read-only (not production code) against a rubric, write a report, and
 return a verdict.
 
