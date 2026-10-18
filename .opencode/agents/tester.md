@@ -4,25 +4,25 @@ mode: subagent
 steps: 40
 permissions:
   - action: edit
-    source: "*"
+    resource: "*"
     effect: deny
   - action: edit
-    source: "src/test/*"
+    resource: "src/test/*"
     effect: allow
   - action: edit
-    source: "*/src/test/*"
+    resource: "*/src/test/*"
     effect: allow
   - action: shell
-    source: "*"
+    resource: "*"
     effect: deny
   - action: shell
-    source: "./gradlew *"
+    resource: "./gradlew *"
     effect: allow
   - action: subagent
-    source: "*"
+    resource: "*"
     effect: deny
   - action: subagent
-    source: "explorer"
+    resource: "explorer"
     effect: allow
 ---
 

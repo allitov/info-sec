@@ -4,13 +4,13 @@ mode: subagent
 steps: 40
 permissions:
   - action: edit
-    source: "*"
+    resource: "*"
     effect: deny
   - action: edit
-    source: "reviews/*"
+    resource: "reviews/*"
     effect: allow
   - action: edit
-    source: "*/reviews/*"
+    resource: "*/reviews/*"
     effect: allow
   - action: shell
     resource: "*"
