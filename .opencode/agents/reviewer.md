@@ -2,20 +2,34 @@
 description: Code-review subagent.
 mode: subagent
 steps: 40
-permissions: 
-  edit: 
-    "*": deny
-    "**/src/main/**": deny
-    "**/src/test/**": deny
-  shell:
-    "*": deny
-    "git log *": allow
-    "git status *": allow
-    "git add *": allow
-    "git show *": allow
-    "git diff *": allow
-  subagent:
-    "*": deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: edit
+    resource: "reviews/*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "git log *"
+    effect: allow
+  - action: shell
+    resource: "git status *"
+    effect: allow
+  - action: shell
+    resource: "git add *"
+    effect: allow
+  - action: shell
+    resource: "git show *"
+    effect: allow
+  - action: shell
+    resource: "git diff *"
+    effect: allow
+  - action: subagent
+    resource: "*"
+    effect: deny
 ---
 
 # Reviewer
