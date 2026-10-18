@@ -2,7 +2,7 @@
 description: Unit-test subagent (JUnit5 + Mockito). Writes/updates tests in the same module's src/test and runs them, returning a concise verdict rather than a log dump.
 mode: subagent
 steps: 40
-permission:
+permissions:
   - action: edit
     source: "*"
     effect: deny

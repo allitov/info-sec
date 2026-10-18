@@ -24,6 +24,9 @@ permissions:
   - action: subagent
     resource: "code-reviewer"
     effect: allow
+  - action: subagent
+    resource: "test-reviewer"
+    effect: allow
 ---
 
 # Planner
