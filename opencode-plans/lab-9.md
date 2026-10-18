@@ -4,7 +4,7 @@
 
 **Goal:** Реализовать ЭЦП Эль-Гамаля (tasks/lab-9.md): новый утилитный класс `ElGamal` в пакете `io.allitov` — подпись любого файла (отдельным файлом подписи И присоединённой — оба варианта, как в lab-8) и проверка подписи. SHA-256 хеш подписывается побайтово: каждый байт h — пара (a, b) при одних и тех же ключах {p, g, Cb, Db}, переиспользуемых из `IlGamal.generateKeys()/createKeys()`. CLI зеркалирует `RSASign` (`sign|sign-attached|verify|verify-attached`, режим `manual|random`); тесты зеркалируют `RSASignTest`/`IlGamalTest`. Критерий готовности: `gradlew test` зелёный включая новый `ElGamalTest`; round-trip «подпись → проверка = true», любая модификация файла или подписи → false.
 
-**active:** T3
+**active:** —
 
 ## open_questions
 
@@ -48,7 +48,7 @@
     - **acceptance:** `gradlew compileJava` проходит; `gradlew run --args="..."` с командами `sign` / `sign-attached` / `verify` / `verify-attached` диспетчит в `ElGamal`; поведение соответствует прежнему контракту CLI (те же аргументы, режим manual|random).
     - **description:** Переписать диспетчер `Main` на команды lab-9 (вызовы `ElGamal`), решение Q1.
     - **touched:** src/main/java/io/allitov/Main.java (ретаргет RSASign→ElGamal; ревью: reviews/lab-9-t2.code-review.md, PASS)
-- [ ] **T3** — Тесты `ElGamalTest`
+- [x] **T3** — Тесты `ElGamalTest`
     - **agent:** tester
     - **inputs:**
         - Создать `src/test/java/io/allitov/ElGamalTest.java`, зеркало `src/test/java/io/allitov/RSASignTest.java` (448 строк) в конвенциях `IlGamalTest.java`: JUnit 5 Jupiter + AssertJ, класс `@DisplayName("Электронная подпись Эль-Гамаля")`, `@TempDir Path tempDir` поле, `@Nested`-классы `GenerateKeys`, `CreateKeys`, `Sign`, `SignAttached`, `Verify`, `VerifyAttached` — все с русскими `@DisplayName`.
@@ -67,7 +67,7 @@
     - **deps:** [T1]
     - **acceptance:** `gradlew test` зелёный: все новые тесты ElGamalTest проходят, существующие тесты (RSASignTest, IlGamalTest, RSATest, ShamirTest, VernamTest) не сломаны. Отчёт тестера: перечень написанных тестов + результат прогона.
     - **description:** Написать ElGamalTest по инвентарю в inputs, прогнать полный `gradlew test`.
-    - **touched:**
+    - **touched:** src/test/java/io/allitov/ElGamalTest.java (новый файл, 70 тестов; ревью: reviews/lab-9-t3.test-review.md, PASS)
 
 ## Заметки планировщика (контекст разведки)
 
