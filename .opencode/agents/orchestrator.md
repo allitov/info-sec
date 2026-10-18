@@ -4,52 +4,52 @@ mode: primary
 steps: 60
 permissions:
   - action: edit
-    source: "*"
+    resource: "*"
     effect: deny
   - action: edit
-    source: "*.md"
+    resource: "*.md"
     effect: allow
   - action: edit
-    source: "*/*.md"
+    resource: "*/*.md"
     effect: allow
   - action: read
-    source: "*"
+    resource: "*"
     effect: deny
   - action: read
-    source: "*.md"
+    resource: "*.md"
     effect: allow
   - action: read
-    source: "*/*.md"
+    resource: "*/*.md"
     effect: allow
   - action: glob
-    source: "*"
+    resource: "*"
     effect: deny
   - action: grep
-    source: "*"
+    resource: "*"
     effect: deny
   - action: list
-    source: "*"
+    resource: "*"
     effect: deny
   - action: shell
-    source: "*"
+    resource: "*"
     effect: deny
   - action: subagent
-    source: "*"
+    resource: "*"
     effect: deny
   - action: subagent
-    source: "explorer"
+    resource: "explorer"
     effect: allow
   - action: subagent
-    source: "coder"
+    resource: "coder"
     effect: allow
   - action: subagent
-    source: "tester"
+    resource: "tester"
     effect: allow 
   - action: subagent
-    source: "reviewer"
+    resource: "code-reviewer"
     effect: allow
   - action: subagent
-    source: "test-reviewer"
+    resource: "test-reviewer"
     effect: allow
 ---
 
