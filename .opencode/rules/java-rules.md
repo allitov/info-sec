@@ -1,30 +1,30 @@
-# Правила разработки проекта
+# Java Development Rules
 
-Этот файл содержит обязательные правила, которым ИИ-агент должен следовать при создании, изменении и проверке исходного кода проекта.
+This file contains mandatory rules that the AI agent must follow when creating, modifying, and reviewing the production source code of the project.
 
 ---
 
 ## Project Structure
 
-* [ ] Проект использует **Gradle** в качестве системы сборки.
-* [ ] Все необходимые зависимости для работы проекта уже подключены.
-* [ ] Не искать дополнительные зависимости во внешних источниках без явной необходимости.
-* [ ] Не добавлять новые зависимости в `build.gradle` или `build.gradle.kts`, если это явно не требуется заданием.
-* [ ] Не изменять существующие зависимости без явного требования.
+- The project uses **Gradle** as the build system.
+- All dependencies required for the project are already connected.
+- Do not search for additional dependencies in external sources without an explicit need.
+- Do not add new dependencies to `build.gradle` or `build.gradle.kts` unless the task explicitly requires it.
+- Do not modify existing dependencies without an explicit requirement.
 
 ---
 
 ## Production Code
 
-### Классы
+### Classes
 
-* [ ] Все production-классы должны использовать аннотацию Lombok `@UtilityClass`.
-* [ ] При создании нового класса проверить наличие `@UtilityClass`.
-* [ ] При изменении существующего класса не удалять `@UtilityClass`, если это не требуется явно заданием.
-* [ ] Не создавать обычные классы без `@UtilityClass`.
-* [ ] Текст исключений должен быть на английском языке.
+- Every production class must use the Lombok `@UtilityClass` annotation.
+- When creating a new class, verify that `@UtilityClass` is present.
+- When modifying an existing class, do not remove `@UtilityClass` unless the task explicitly requires it.
+- Do not create plain classes without `@UtilityClass`.
+- Exception messages must be written in English.
 
-Пример:
+Example:
 
 ```java
 import lombok.experimental.UtilityClass;
@@ -38,18 +38,18 @@ public class Calculator {
 }
 ```
 
-### Логирование
+### Logging
 
-* [ ] Для логирования в production-коде использовать Lombok-аннотацию `@Slf4j`.
-* [ ] Для вывода информационных сообщений использовать уровень `info`.
-* [ ] Не использовать `System.out.println()` для вывода информации в production-коде.
-* [ ] При необходимости информационного логирования использовать `log.info(...)`.
-* [ ] Все сообщения логов должны быть написаны **на английском языке**.
-* [ ] Не использовать русский язык в текстах логов.
-* [ ] Сообщения логов должны быть понятными и кратко описывать происходящее в программе.
-* [ ] Не дублировать одну и ту же информацию в нескольких логах без необходимости.
+- Use the Lombok `@Slf4j` annotation for logging in production code.
+- Use the `info` level for informational messages.
+- Do not use `System.out.println()` for printing information in production code.
+- Use `log.info(...)` whenever informational logging is required.
+- All log messages must be written **in English**.
+- Do not use the Russian language in log messages.
+- Log messages must be clear and briefly describe what is happening in the program.
+- Do not duplicate the same information in several log entries without necessity.
 
-Пример:
+Example:
 
 ```java
 import lombok.extern.slf4j.Slf4j;
@@ -71,171 +71,16 @@ public class Calculator {
 }
 ```
 
-Правильно:
+Correct:
 
 ```java
 log.info("Starting calculation for order {}", orderId);
 log.info("Order {} processed successfully", orderId);
 ```
 
-Неправильно:
+Incorrect:
 
 ```java
 log.info("Начало обработки заказа {}", orderId);
 System.out.println("Order processed");
 ```
-
----
-
-## Tests
-
-### Структура тестов
-
-* [ ] Для каждого отдельного production-метода использовать отдельный вложенный класс с аннотацией `@Nested`.
-* [ ] Название вложенного класса должно однозначно отражать тестируемый метод.
-* [ ] Не объединять тесты разных production-методов в одном `@Nested`-классе.
-* [ ] Все тесты конкретного метода должны находиться внутри соответствующего `@Nested`-класса.
-
-Пример:
-
-```java
-class CalculatorTest {
-
-    @Nested
-    class Add {
-
-        // тесты метода add()
-    }
-
-    @Nested
-    class Multiply {
-
-        // тесты метода multiply()
-    }
-}
-```
-
----
-
-### Параметризованные тесты
-
-* [ ] По возможности использовать параметризованные тесты.
-* [ ] Если несколько тестовых сценариев отличаются только входными данными и ожидаемым результатом, использовать параметризованный тест.
-* [ ] Предпочитать параметризованные тесты вместо дублирования одинаковой тестовой логики.
-* [ ] Для простых наборов данных использовать `@CsvSource`.
-* [ ] Для сложных объектов или больших наборов данных использовать подходящий механизм предоставления аргументов, например `@MethodSource`.
-
-Пример:
-
-```java
-@ParameterizedTest
-@CsvSource({
-        "1, 2, 3",
-        "5, 10, 15",
-        "-1, 1, 0"
-})
-@DisplayName("Сложение двух чисел")
-void shouldAddNumbers(int a, int b, int expected) {
-    assertThat(Calculator.add(a, b))
-            .isEqualTo(expected);
-}
-```
-
----
-
-### Расположение методов с тестовыми данными
-
-* [ ] Методы, предоставляющие тестовые данные, должны располагаться **после тестового метода, который их использует**.
-* [ ] Не размещать `@MethodSource`-методы перед тестами, которые используют эти данные.
-* [ ] Сначала должен находиться тестовый метод, затем используемый им источник данных.
-
-Правильно:
-
-```java
-@ParameterizedTest
-@MethodSource("provideTestData")
-@DisplayName("Проверка обработки входных данных")
-void shouldProcessData(int input, int expected) {
-    assertThat(Calculator.process(input))
-            .isEqualTo(expected);
-}
-
-static Stream<Arguments> provideTestData() {
-    return Stream.of(
-            Arguments.of(1, 2),
-            Arguments.of(2, 4),
-            Arguments.of(3, 6)
-    );
-}
-```
-
-Неправильно:
-
-```java
-static Stream<Arguments> provideTestData() {
-    // ...
-}
-
-@ParameterizedTest
-@MethodSource("provideTestData")
-void shouldProcessData(int input, int expected) {
-    // ...
-}
-```
-
----
-
-### `@DisplayName`
-
-* [ ] Каждый тестовый метод должен иметь аннотацию `@DisplayName`.
-* [ ] `@DisplayName` должен кратко описывать проверяемое поведение.
-* [ ] Не оставлять тестовые методы без `@DisplayName`.
-* [ ] Текст `@DisplayName` должен быть понятен без необходимости читать реализацию теста.
-* [ ] Для проекта использовать русский язык в `@DisplayName`, если это соответствует языку существующих тестов.
-
-Пример:
-
-```java
-@Test
-@DisplayName("Возвращает 0 для пустого списка")
-void shouldReturnZeroForEmptyList() {
-    // ...
-}
-```
-
----
-
-## Итоговый чеклист перед завершением работы
-
-### Production
-
-* [ ] Все созданные и изменённые классы используют `@UtilityClass`.
-* [ ] Не добавлены обычные классы без `@UtilityClass`.
-* [ ] Для логирования используется `@Slf4j`.
-* [ ] Информационные сообщения выводятся через `log.info(...)`.
-* [ ] `System.out.println()` не используется для production-логирования.
-* [ ] Все сообщения логов написаны на английском языке.
-* [ ] Логи содержат понятные и информативные сообщения.
-* [ ] Логирование не дублируется без необходимости.
-
-### Tests
-
-* [ ] Для каждого production-метода создан отдельный `@Nested`-класс.
-* [ ] Где возможно, используются параметризованные тесты.
-* [ ] Для наборов простых данных предпочтительно используется `@CsvSource`.
-* [ ] Для сложных тестовых данных используется `@MethodSource` или другой подходящий источник.
-* [ ] Методы, предоставляющие тестовые данные, находятся после использующих их тестовых методов.
-* [ ] Каждый тестовый метод имеет `@DisplayName`.
-* [ ] Тесты организованы последовательно и не содержат дублирования тестовой логики.
-
----
-
-## Обязательное правило для ИИ-агента
-
-Перед завершением любой задачи по изменению кода ИИ-агент должен самостоятельно проверить данный чеклист.
-
-Если обнаружено нарушение любого из обязательных правил:
-
-1. Исправить нарушение.
-2. Повторно проверить изменённый код.
-3. Только после этого считать задачу выполненной.
