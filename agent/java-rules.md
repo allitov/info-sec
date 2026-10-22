@@ -9,7 +9,7 @@ This file contains mandatory rules that the AI agent must follow when creating, 
 - The project uses **Gradle** as the build system.
 - All dependencies required for the project are already connected.
 - Do not search for additional dependencies in external sources without an explicit need.
-- Do not add new dependencies to `build.gradle` or `build.gradle.kts` unless the task explicitly requires it.
+- Do not add new dependencies to `build.gradle` or `../build.gradle.kts` unless the task explicitly requires it.
 - Do not modify existing dependencies without an explicit requirement.
 
 ---
