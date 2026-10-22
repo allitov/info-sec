@@ -1,6 +1,7 @@
 package io.allitov;
 
 import io.allitov.signers.ElGamal;
+import io.allitov.signers.Gost;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,14 +12,12 @@ import java.util.Scanner;
 
 @Slf4j
 @UtilityClass
-public class Main {
+public final class Main {
 
     private final Scanner SCANNER = new Scanner(System.in);
-    private final String USAGE = """
-            Usage: sign <input> <signature> manual|random,
-            sign-attached <input> <output> manual|random,
-            verify <input> <signature> manual or verify-attached <input> manual
-            """;
+    private final String USAGE = "Usage: sign <input> <signature> manual|random, "
+            + "sign-attached <input> <output> manual|random, "
+            + "verify <input> <signature> manual or verify-attached <input> manual";
 
     void main(String[] args) {
         run(args);
@@ -51,7 +50,7 @@ public class Main {
 
         long[] keys = readSigningKeys(args[3]);
         if (keys != null) {
-            ElGamal.sign(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2]);
+            Gost.sign(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2], keys[3]);
         }
     }
 
@@ -63,7 +62,7 @@ public class Main {
 
         long[] keys = readSigningKeys(args[3]);
         if (keys != null) {
-            ElGamal.signAttached(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2]);
+            Gost.signAttached(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2], keys[3]);
         }
     }
 
@@ -79,8 +78,8 @@ public class Main {
         }
 
         long[] keys = readVerificationKeys();
-        boolean valid = ElGamal.verify(Path.of(args[1]), Path.of(args[2]),
-                keys[0], keys[1], keys[2]);
+        boolean valid = Gost.verify(Path.of(args[1]), Path.of(args[2]),
+                keys[0], keys[1], keys[2], keys[3]);
         log.info("Signature is {}", valid ? "valid" : "invalid");
     }
 
@@ -96,21 +95,22 @@ public class Main {
         }
 
         long[] keys = readVerificationKeys();
-        boolean valid = ElGamal.verifyAttached(Path.of(args[1]), keys[0], keys[1], keys[2]);
+        boolean valid = Gost.verifyAttached(Path.of(args[1]), keys[0], keys[1], keys[2], keys[3]);
         log.info("Attached signature is {}", valid ? "valid" : "invalid");
     }
 
-    private long[] readSigningKeys(String mode) throws IOException {
+    private long[] readSigningKeys(String mode) {
         if ("random".equals(mode)) {
-            long[] keys = ElGamal.generateKeys();
-            return new long[] {keys[0], keys[1], keys[2]};
+            long[] keys = Gost.generateKeys();
+            return new long[] {keys[0], keys[1], keys[2], keys[3]};
         }
 
         if ("manual".equals(mode)) {
             long p = readLong("p");
-            long g = readLong("g");
+            long q = readLong("q");
+            long a = readLong("a");
             long cb = readLong("Cb");
-            return new long[] {p, g, cb};
+            return new long[] {p, q, a, cb};
         }
 
         log.error("Signing mode must be manual or random");
@@ -119,9 +119,10 @@ public class Main {
 
     private long[] readVerificationKeys() {
         long p = readLong("p");
-        long g = readLong("g");
+        long q = readLong("q");
+        long a = readLong("a");
         long db = readLong("Db");
-        return new long[] {p, g, db};
+        return new long[] {p, q, a, db};
     }
 
     private long readLong(String name) {
