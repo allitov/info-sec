@@ -1,4 +1,4 @@
-package io.allitov;
+package io.allitov.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;

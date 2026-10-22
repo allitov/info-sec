@@ -1,5 +1,6 @@
-package io.allitov;
+package io.allitov.encoders;
 
+import io.allitov.common.CryptoUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 

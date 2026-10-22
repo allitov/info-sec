@@ -1,4 +1,4 @@
-package io.allitov;
+package io.allitov.encoders;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -7,6 +7,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+import io.allitov.common.CryptoUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;

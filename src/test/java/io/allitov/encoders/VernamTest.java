@@ -1,4 +1,4 @@
-package io.allitov;
+package io.allitov.encoders;
 
 import java.io.IOException;
 import java.nio.file.Files;

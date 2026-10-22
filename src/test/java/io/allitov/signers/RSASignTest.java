@@ -1,4 +1,4 @@
-package io.allitov;
+package io.allitov.signers;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.stream.Stream;
 
+import io.allitov.encoders.RSA;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
