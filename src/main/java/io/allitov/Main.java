@@ -1,5 +1,6 @@
 package io.allitov;
 
+import io.allitov.signers.ElGamal;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +51,7 @@ public class Main {
 
         long[] keys = readSigningKeys(args[3]);
         if (keys != null) {
-            RSASign.sign(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2]);
+            ElGamal.sign(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2]);
         }
     }
 
@@ -62,7 +63,7 @@ public class Main {
 
         long[] keys = readSigningKeys(args[3]);
         if (keys != null) {
-            RSASign.signAttached(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2]);
+            ElGamal.signAttached(Path.of(args[1]), Path.of(args[2]), keys[0], keys[1], keys[2]);
         }
     }
 
@@ -78,7 +79,7 @@ public class Main {
         }
 
         long[] keys = readVerificationKeys();
-        boolean valid = RSASign.verify(Path.of(args[1]), Path.of(args[2]),
+        boolean valid = ElGamal.verify(Path.of(args[1]), Path.of(args[2]),
                 keys[0], keys[1], keys[2]);
         log.info("Signature is {}", valid ? "valid" : "invalid");
     }
@@ -95,21 +96,21 @@ public class Main {
         }
 
         long[] keys = readVerificationKeys();
-        boolean valid = RSASign.verifyAttached(Path.of(args[1]), keys[0], keys[1], keys[2]);
+        boolean valid = ElGamal.verifyAttached(Path.of(args[1]), keys[0], keys[1], keys[2]);
         log.info("Attached signature is {}", valid ? "valid" : "invalid");
     }
 
-    private long[] readSigningKeys(String mode) {
+    private long[] readSigningKeys(String mode) throws IOException {
         if ("random".equals(mode)) {
-            long[] keys = RSA.generateKeys();
-            return new long[] {keys[0], keys[1], keys[3]};
+            long[] keys = ElGamal.generateKeys();
+            return new long[] {keys[0], keys[1], keys[2]};
         }
 
         if ("manual".equals(mode)) {
             long p = readLong("p");
-            long q = readLong("q");
+            long g = readLong("g");
             long cb = readLong("Cb");
-            return new long[] {p, q, cb};
+            return new long[] {p, g, cb};
         }
 
         log.error("Signing mode must be manual or random");
@@ -118,9 +119,9 @@ public class Main {
 
     private long[] readVerificationKeys() {
         long p = readLong("p");
-        long q = readLong("q");
+        long g = readLong("g");
         long db = readLong("Db");
-        return new long[] {p, q, db};
+        return new long[] {p, g, db};
     }
 
     private long readLong(String name) {
